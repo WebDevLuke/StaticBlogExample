@@ -1,0 +1,24 @@
+<div class="u-margin-bottom-small u-margin-bottom-regular@md">
+	<h2 class="c-type-beta u-margin-bottom-tiny">Categories</h2>
+	<ul class="o-list-bare">
+		{% for category in categories | sort(caseSens = true) %}
+			<li><a href="/category/{{category | lower | replace(" ", "-")}}">{{category}}</a></li>
+		{% endfor %}
+	</ul>
+</div>
+<div class="u-margin-bottom-small u-margin-bottom-regular@md">
+	<h2 class="c-type-beta u-margin-bottom-tiny">Tags</h2>
+	<ul class="o-list-bare">
+		{% for tag in tags | sort(caseSens = true) %}
+			<li><a href="/tag/{{tag | lower | replace(" ", "-")}}">{{tag}}</a></li>
+		{% endfor %}
+	</ul>
+</div>
+<div class="u-margin-bottom-small u-margin-bottom-regular@md">
+	<h2 class="c-type-beta u-margin-bottom-tiny">Authors</h2>
+	<ul class="o-list-bare">
+		{% for author in authors | sort(caseSens = true) %}
+			<li><a href="/author/{{author | lower | replace(" ", "-")}}">{{author}}</a></li>
+		{% endfor %}
+	</ul>
+</div> 

@@ -1,0 +1,16 @@
+//--------------------------------------------------------------------------------------------------------------------------------------
+// COLORS
+//--------------------------------------------------------------------------------------------------------------------------------------
+
+/*
+Here we can define a map of colors. These are filtered out to auto-generate various utility classes, for
+example "u-background-mycolor'.
+*/
+
+// Set colors
+$colors: (
+	"lightgrey": #eeeeee,
+	"darkgrey": #333333,
+	"blue": #41b7d8,
+	"red": #e43b2c
+) !default;

@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+<!--Meta Stuff-->
+<meta charset="UTF-8" />
+
+<!--Responsive Viewport-->
+<meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1" />
+
+<!--Page Title-->
+<title>{{post.title}} | {{config.title}}</title>
+
+<!--CSS-->
+<link rel="stylesheet" type="text/css" href="/css/main.min.css" />
+
+</head>
+<body>
+
+<header class="o-box o-box--spacing-large u-padding-horizontal-none u-background-lightgrey u-align-center u-margin-bottom-regular u-margin-bottom-huge@md">	
+	<h1 class="c-type-alpha">{{config.title}}</h1>
+</header>
+
+<div class="o-container u-margin-bottom-huge">
+	<div class="o-layout o-layout--spacing-large">
+		<section class="o-layout__item u-8/12@md">
+
+			{# Post #}
+			<div data-component="post" class="c-post u-margin-bottom-regular">
+				{# Title #}
+				<div class="c-post__title">
+					<h2 class="c-type-charlie">{{post.title}}</h2>
+					<span>By <a href="/author/{{post.author | lower | replace(" ", "-")}}">{{post.author}}</a></span>
+				</div>
+				<div class="c-post__info u-margin-bottom-small">
+
+					<div class="u-float-left@sm3 u-margin-right-small@sm3">
+						<div class="o-media o-media--spacing-micro">
+							<div class="o-media__image">
+								<img src="/img/clock.svg" class="c-icon-clock" alt="post date">
+							</div>
+							<div class="o-media__body">
+								{{post.date}}
+							</div>
+						</div>						
+					</div>
+
+					<div class="u-float-left@sm3 u-margin-right-small@sm3">
+						<div class="o-media o-media--spacing-micro">
+							<div class="o-media__image">
+								<img src="/img/folder.svg" class="c-icon-folder" alt="category">
+							</div>
+							<div class="o-media__body">
+								<a href="/category/{{post.category | lower | replace(" ", "-")}}">{{post.category}}</a>
+							</div>
+						</div>						
+					</div>
+
+					<div class="u-float-left@sm3 u-margin-right-small@sm3">
+						<div class="o-media o-media--spacing-micro">
+							<div class="o-media__image">
+								<img src="/img/tag.svg" class="c-icon-tag" alt="tag">
+							</div>
+							<div class="o-media__body">
+								<ul class="o-list-inline o-list-inline--delimited-comma o-list-inline--spacing-tiny">
+									{% for tag in post.tags %}
+										<li class="o-list-inline__item"><a href="/tag/{{tag | lower | replace(" ", "-")}}">{{tag}}</a></li>
+									{% endfor %}
+								</ul>
+							</div>
+						</div>						
+					</div>
+				</div>
+
+				{% markdown %}
+				{% include "posts/" + post.copy %}
+				{% endmarkdown %}
+
+			</div>
+
+		</section>
+		<aside class="o-layout__item u-4/12@md">
+			{% include "templates/blog-sidebar.html" %} 
+		</aside>
+	</div>
+</div>
+
+
+
+
+</body>
+</html>

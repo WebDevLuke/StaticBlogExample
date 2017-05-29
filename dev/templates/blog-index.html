@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+<!--Meta Stuff-->
+<meta charset="UTF-8" />
+
+<!--Responsive Viewport-->
+<meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1" />
+
+<!--Page Title-->
+<title>{{config.title}}</title>
+
+<!--CSS-->
+<link rel="stylesheet" type="text/css" href="/css/main.min.css" />
+
+</head>
+<body>
+
+<header class="o-box o-box--spacing-large u-padding-horizontal-none u-background-lightgrey u-align-center u-margin-bottom-regular u-margin-bottom-huge@md">	
+	<h1 class="c-type-alpha">{{config.title}}</h1>
+</header>
+
+<div class="o-container u-margin-bottom-huge@md">
+	<div class="o-layout o-layout--spacing-large@md">
+		<section class="o-layout__item u-8/12@md">
+
+			<div class="o-box o-box--spacing-small u-background-lightgrey u-margin-bottom-regular" data-component="category-title">
+				Viewing all posts in <span class="u-strong">Design</span>
+				<a href="/" class="u-float-right"><img src="/img/delete.svg" class="c-icon-delete" alt="delete filter"></a>
+			</div>
+
+			<div data-component="posts" class="u-margin-bottom-small u-margin-bottom-large@md">
+
+				{% for post in posts %}
+					{# Post #}
+					<div data-component="post" class="c-post u-margin-bottom-regular">
+						{# Title #}
+						<div class="c-post__title">
+							<h2 class="c-type-charlie"><a href="/posts/{{post.title | lower | replace(" ", "-")}}">{{post.title}}</a></h2>
+							<span>By <a href="/author/{{post.author | lower | replace(" ", "-")}}">{{post.author}}</a></span>
+						</div>
+						<div class="c-post__info u-margin-bottom-small">
+
+							<div class="u-float-left@sm3 u-margin-right-small@sm3">
+								<div class="o-media o-media--spacing-micro">
+									<div class="o-media__image">
+										<img src="/img/clock.svg" class="c-icon-clock" alt="post date">
+									</div>
+									<div class="o-media__body">
+										{{post.date}}
+									</div>
+								</div>						
+							</div>
+
+							<div class="u-float-left@sm3 u-margin-right-small@sm3">
+								<div class="o-media o-media--spacing-micro">
+									<div class="o-media__image">
+										<img src="/img/folder.svg" class="c-icon-folder" alt="category">
+									</div>
+									<div class="o-media__body">
+										<a href="/category/{{post.category | lower | replace(" ", "-")}}">{{post.category}}</a>
+									</div>
+								</div>						
+							</div>
+
+							<div class="u-float-left@sm3 u-margin-right-small@sm3">
+								<div class="o-media o-media--spacing-micro">
+									<div class="o-media__image">
+										<img src="/img/tag.svg" class="c-icon-tag" alt="tag">
+									</div>
+									<div class="o-media__body">
+										<ul class="o-list-inline o-list-inline--delimited-comma o-list-inline--spacing-tiny">
+											{% for tag in post.tags %}
+												<li class="o-list-inline__item"><a href="/tag/{{tag | lower | replace(" ", "-")}}">{{tag}}</a></li>
+											{% endfor %}
+										</ul>
+									</div>
+								</div>						
+							</div>
+
+						</div>
+						<p>{{post.excerpt}}</p>
+						<a href="/posts/{{post.title | lower | replace(" ", "-")}}" class="c-button">Read more</a>
+					</div>
+				{% endfor %}
+
+
+
+			</div>
+
+			<nav class="u-align-center u-margin-bottom-regular@max-md" data-component="pagination">	
+				<ul class="o-list-inline">
+					<li class="o-list-inline__item u-1/3">
+						{% if currentPage === 2 %}
+							<a href="/articles" class="u-bold">Previous</a>
+						{% elseif currentPage !== 1 %}
+							<a href="/articles/{{ currentPage - 1}}" class="u-bold">Previous</a>
+						{% endif %}
+					</li>
+					<li class="o-list-inline__item u-1/3 u-align-center">
+						<ul class="o-list-inline o-list-inline--spacing-small o-list-inline--delimited-pipe">
+							{% for i in range(1, (pageNum|int + 1)) -%}
+								<li class="o-list-inline__item"><a href="/articles/{% if i !== 1 %}{{i}}{% endif %}" class="c-link c-link--red {% if i !== currentPage %}c-link--reverse{% endif %} c-type-foxtrot u-bold">{{i}}</a></li>
+							{%- endfor %}
+						</ul>
+					</li>
+					<li class="o-list-inline__item u-1/3 u-align-right">
+						{% if currentPage !== pageNum %}
+							<a href="/articles/{{ currentPage + 1}}" class="u-bold">Next</a>
+						{% endif %}
+					</li>
+				</ul>
+			</nav>
+		</section>
+		<aside class="o-layout__item u-4/12@md">
+			{% include "templates/blog-sidebar.html" %}
+		</aside>
+	</div>
+</div>
+
+
+
+
+</body>
+</html>

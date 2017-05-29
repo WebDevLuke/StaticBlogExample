@@ -1,0 +1,44 @@
+{
+	"title" : "My Static Generated Blog",
+	"postsPerPage" : 1,
+	"posts" : [
+		{
+			"title" : "My Post",
+			"author" : "Luke Harrison",
+			"slug" : "my-post",
+			"date" : "27th September 2017",
+			"copy" : "my-post.md",
+			"category" : "Design",
+			"tags" : [
+				"HTML",
+				"CSS"
+			],
+			"excerpt" : "This is the excerpt for this post. All hail the excerpt"
+		},
+		{
+			"title" : "My Second Post",
+			"author" : "Luke Harrison",
+			"slug" : "my-post",
+			"date" : "2nd October 2017",
+			"copy" : "my-post.md",
+			"category" : "Design",
+			"tags" : [
+				"HTML"
+			],
+			"excerpt" : "This is the excerpt for this post. All hail the excerpt! Again!"
+		},
+		{
+			"title" : "My Third Post",
+			"author" : "Luke Bog",
+			"slug" : "my-post",
+			"date" : "27th November 2017",
+			"copy" : "my-post.md",
+			"category" : "Web Development",
+			"tags" : [
+				"HTML",
+				"JavaScript"
+			],
+			"excerpt" : "This is the excerpt for this post. All hail the excerpt! BLA BLA BLA"
+		}
+	]
+}
