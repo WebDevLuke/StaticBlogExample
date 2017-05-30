@@ -6,58 +6,6 @@
 Tweak various options to suit the needs of your project
 */
 
-// MINIFY
-//--------------------------------------------------------------------------------------------------------------------------------------
-
-/*
-If minify is true then CSS & JS will be minified once compiled and will have a .min suffix before the file
-extension. For example 'style.min.css'.
-*/
-
-const minify = true;
-
-
-// SASS LINTING
-//--------------------------------------------------------------------------------------------------------------------------------------
-
-/*
-If lint is true then SASS will be linted by stylelint to enforce style guidelines. These rules can be tweaked 
-in '.stylelintrc'.
-*/
-
-const lint = false;
-
-
-// CONFIGURE PATHS
-//--------------------------------------------------------------------------------------------------------------------------------------
-
-/*
-Here you can configure the paths used by Gulp to align with your project's directory structure.
-*/
-
-// Development root
-const dev = "dev";
-
-// Distribution root
-const dist = "dist";
-
-// HTML directories
-const htmlDev = "dev/templates";
-const htmlDist = dist;
-
-// Image directories
-const imgDev = "dev/img";
-const imgDist = "dist/img";
-
-// SASS directories
-const sassDev = "dev/sass";
-const sassDist = "dist/css";
-
-// JS directories
-const jsDev = "dev/js";
-const jsDist = "dist/js";
-
-
 //--------------------------------------------------------------------------------------------------------------------------------------
 // SET DEPENDENCIES
 //--------------------------------------------------------------------------------------------------------------------------------------
@@ -135,7 +83,8 @@ for(var i = 0; i < config.posts.length; i++) {
 		categoryList.push(config.posts[i].category);
 	}
 }
-// Construct category object
+// Populate category object
+// This holds each category name + a list of all child posts
 for(var i = 0; i < categoryList.length; i++) {
 	// Create category object
 	var category = new Object;
@@ -169,15 +118,16 @@ for(var i = 0; i < config.posts.length; i++) {
 		}
 	}
 }
-// Construct tags object
+// Populate tags object
+// This holds each tag name + a list of all child posts
 for(var i = 0; i < tagsList.length; i++) {
-	// Create category object
+	// Create tag object
 	var tag = new Object;
 	// Populate name
 	tag.name = tagsList[i];
-	// Create empty array to hold category posts
+	// Create empty array to hold tag posts
 	tag.posts = new Array;
-	// Populate category posts
+	// Populate tag posts
 	for(var h = 0; h < config.posts.length; h++) {
 		// If we have any matches
 		for(var m = 0; m < config.posts[h].tags.length; m++) {
@@ -186,7 +136,7 @@ for(var i = 0; i < tagsList.length; i++) {
 			}
 		}
 	}
-	// Push to global categories object
+	// Push to global tags object
 	tags.push(tag);
 }
 
@@ -203,7 +153,8 @@ for(var i = 0; i < config.posts.length; i++) {
 		authorsList.push(config.posts[i].author);
 	}
 }
-// Construct authors object
+// Populate authors object
+// This holds each author name + a list of all child posts
 for(var i = 0; i < authorsList.length; i++) {
 	// Create authors object
 	var author = new Object;
@@ -218,7 +169,7 @@ for(var i = 0; i < authorsList.length; i++) {
 			author.posts.push(config.posts[h]);
 		}
 	}
-	// Push to global author object
+	// Push to global authors object
 	authors.push(author);
 }
 
@@ -232,19 +183,19 @@ var renderPages = function(posts, destDir, filter) {
 	var pageNum = Math.ceil(posts.length / config.postsPerPage);
 	// Duplicate articles so we can remove stuff without affecting global list
 	var postsLocal = posts.slice();
-	// Set up loop for while loop
-	// Start at 1
+	// Set up int for while loop. This will help with pagination naming.
+	// Start at 1, as in page 1
 	var k = 1;
 	// Set up variable to determine if we should name a page index.html
 	var indexToCome = true;
 
 	// While loop
 	while(postsLocal.length){
-		// If we have a block of 3 add that
+		// If we have a block of postsPerPage add that
 		if(postsLocal.length >= config.postsPerPage) {
 			var postsToAdd = postsLocal.splice(0, config.postsPerPage);
 		}
-		// If no more blocks of 3 remain, just add what's left
+		// If no more blocks of postsPerPage remain, just add what's left
 		else {
 			var postsToAdd = postsLocal;
 			postsLocal = [];
@@ -263,9 +214,9 @@ var renderPages = function(posts, destDir, filter) {
 		}, {env: env}))
 		.pipe(gulpif(indexToCome, rename("index.html"), rename(k + ".html")))
 		.pipe(gulp.dest(destDir));
-		// Incrememt while int
+		// Increment pagination int
 		k++;
-		// Flag that index has been processed
+		// Mark that index has been generated
 		indexToCome = false;
 	}
 }
@@ -312,7 +263,6 @@ gulp.task('blog-posts', function() {
 	for(var i = 0; i < config.posts.length; i++) {
 		console.log("Generated " + config.posts[i].title);
 		var post = config.posts[i];
-		var slug = config.posts[i].title.replace(/ /g, '-').toLowerCase();
 		gulp.src('./dev/templates/blog-post.html')
 		.pipe(gulpNunjucks.compile({
 			config: config,
@@ -321,7 +271,7 @@ gulp.task('blog-posts', function() {
 			authors: authorsList,
 			post: post
 		}, {env: env}))
-		.pipe(rename(slug + ".html"))
+		.pipe(rename(config.posts[i].title.replace(/ /g, '-').toLowerCase() + ".html"))
 		.pipe(gulp.dest("./dist/"));
 	}
 });
@@ -335,19 +285,92 @@ gulp.task('generate-blog', function(){
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 //--------------------------------------------------------------------------------------------------------------------------------------
 // SECONDARY GULP TASKS
 //--------------------------------------------------------------------------------------------------------------------------------------
 
 /*
-A collection of tasks which aren't related to the "Generate static blog" concept. These are generally hacked
-together so you should probably just ignore them.
+A collection of tasks which aren't related to the "Generate static blog" concept. These aren't really relevant
+to static blogs so you should probably just ignore them.
 */
+
+// MINIFY
+//--------------------------------------------------------------------------------------------------------------------------------------
+
+/*
+If minify is true then CSS & JS will be minified once compiled and will have a .min suffix before the file
+extension. For example 'style.min.css'.
+*/
+
+const minify = true;
+
+
+// SASS LINTING
+//--------------------------------------------------------------------------------------------------------------------------------------
+
+/*
+If lint is true then SASS will be linted by stylelint to enforce style guidelines. These rules can be tweaked 
+in '.stylelintrc'.
+*/
+
+const lint = false;
+
+
+// CONFIGURE PATHS
+//--------------------------------------------------------------------------------------------------------------------------------------
+
+/*
+Here you can configure the paths used by Gulp to align with your project's directory structure.
+*/
+
+// Development root
+const dev = "dev";
+
+// Distribution root
+const dist = "dist";
+
+// HTML directories
+const htmlDev = "dev/templates";
+const htmlDist = dist;
+
+// Image directories
+const imgDev = "dev/img";
+const imgDist = "dist/img";
+
+// SASS directories
+const sassDev = "dev/sass";
+const sassDist = "dist/css";
+
+// JS directories
+const jsDev = "dev/js";
+const jsDist = "dist/js";
+
 
 // SERVER TASK
 //--------------------------------------------------------------------------------------------------------------------------------------
 
-gulp.task('webserver', function() {
+gulp.task('serve', function() {
 	gulp.src('./dist/')
 	.pipe(webserver({
 		open: true
