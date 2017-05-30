@@ -18,26 +18,33 @@
 <body>
 
 <header class="o-box o-box--spacing-large u-padding-horizontal-none u-background-lightgrey u-align-center u-margin-bottom-regular u-margin-bottom-huge@md">	
-	<h1 class="c-type-alpha">{{config.title}}</h1>
+	<h1 class="c-type-alpha"><a href="/">{{config.title}}</a></h1>
 </header>
 
 <div class="o-container u-margin-bottom-huge@md">
 	<div class="o-layout o-layout--spacing-large@md">
 		<section class="o-layout__item u-8/12@md">
 
-			<div class="o-box o-box--spacing-small u-background-lightgrey u-margin-bottom-regular" data-component="category-title">
-				Viewing all posts in <span class="u-strong">Design</span>
-				<a href="/" class="u-float-right"><img src="/img/delete.svg" class="c-icon-delete" alt="delete filter"></a>
-			</div>
+			{% if filter %}
+				<div class="o-box o-box--spacing-small u-background-lightgrey u-margin-bottom-regular" data-component="filter-title">
+					{% if filter.type === "category" %}
+						Viewing all posts in <span class="u-strong">{{filter.name}}</span> category
+					{% elseif filter.type === "tag" %}
+						Viewing all posts tagged with <span class="u-strong">{{filter.name}}</span>
+					{% elseif filter.type === "author" %}
+						Viewing all posts by <span class="u-strong">{{filter.name}}</span>
+					{% endif %}
+					<a href="/" class="u-float-right"><img src="/img/delete.svg" class="c-icon-delete" alt="delete filter"></a>
+				</div>
+			{% endif %}
 
 			<div data-component="posts" class="u-margin-bottom-small u-margin-bottom-large@md">
-
 				{% for post in posts %}
 					{# Post #}
 					<div data-component="post" class="c-post u-margin-bottom-regular">
 						{# Title #}
 						<div class="c-post__title">
-							<h2 class="c-type-charlie"><a href="/posts/{{post.title | lower | replace(" ", "-")}}">{{post.title}}</a></h2>
+							<h2 class="c-type-charlie"><a href="/{{post.title | lower | replace(" ", "-")}}.html">{{post.title}}</a></h2>
 							<span>By <a href="/author/{{post.author | lower | replace(" ", "-")}}">{{post.author}}</a></span>
 						</div>
 						<div class="c-post__info u-margin-bottom-small">
@@ -81,37 +88,43 @@
 
 						</div>
 						<p>{{post.excerpt}}</p>
-						<a href="/posts/{{post.title | lower | replace(" ", "-")}}" class="c-button">Read more</a>
+						<a href="/{{post.title | lower | replace(" ", "-")}}.html" class="c-button">Read more</a>
 					</div>
 				{% endfor %}
-
-
-
 			</div>
 
-			<nav class="u-align-center u-margin-bottom-regular@max-md" data-component="pagination">	
-				<ul class="o-list-inline">
-					<li class="o-list-inline__item u-1/3">
-						{% if currentPage === 2 %}
-							<a href="/articles" class="u-bold">Previous</a>
-						{% elseif currentPage !== 1 %}
-							<a href="/articles/{{ currentPage - 1}}" class="u-bold">Previous</a>
-						{% endif %}
-					</li>
-					<li class="o-list-inline__item u-1/3 u-align-center">
-						<ul class="o-list-inline o-list-inline--spacing-small o-list-inline--delimited-pipe">
-							{% for i in range(1, (pageNum|int + 1)) -%}
-								<li class="o-list-inline__item"><a href="/articles/{% if i !== 1 %}{{i}}{% endif %}" class="c-link c-link--red {% if i !== currentPage %}c-link--reverse{% endif %} c-type-foxtrot u-bold">{{i}}</a></li>
-							{%- endfor %}
-						</ul>
-					</li>
-					<li class="o-list-inline__item u-1/3 u-align-right">
-						{% if currentPage !== pageNum %}
-							<a href="/articles/{{ currentPage + 1}}" class="u-bold">Next</a>
-						{% endif %}
-					</li>
-				</ul>
-			</nav>
+			{# Generate pagination if we have more than 1 page #}
+			{% if pageNum > 1 %}
+				{# Determine which path to use #}
+				{% if filter %}
+					{% set path = filter.type|lower|replace(" ", "-") + "/" + filter.name|lower|replace(" ", "-") + "/" %}
+				{% else %}
+					{% set path = "" %}
+				{% endif %}
+				<nav class="u-align-center u-margin-bottom-regular@max-md" data-component="pagination">	
+					<div class="o-layout">
+						<div class="o-layout__item o-layout__item--1 o-layout__item--1@sm3 u-1/2 u-1/3@sm3 u-align-left u-margin-bottom-tiny@max-sm3">
+							{% if currentPage === 2 %}
+								<a href="/{{path}}">Previous</a>
+							{% elseif currentPage !== 1 %}
+								<a href="/{{path}}{{ currentPage - 1}}.html">Previous</a>
+							{% endif %}
+						</div>
+						<div class="o-layout__item o-layout__item--3 o-layout__item--2@sm3 u-1/3@sm3 u-align-center">
+							<ul class="o-list-inline o-list-inline--spacing-small o-list-inline--delimited-pipe">
+								{% for i in range(1, (pageNum|int + 1)) -%}
+									<li class="o-list-inline__item"><a href="/{{path}}{% if i !== 1 %}{{i}}.html{% endif %}" class="{% if i === currentPage %}u-strong{% endif %}">{{i}}</a></li>
+								{%- endfor %}
+							</ul>
+						</div>
+						<div class="o-layout__item o-layout__item--2 o-layout__item--3@sm3 u-1/2 u-1/3@sm3 u-align-right u-margin-bottom-tiny@max-sm3">
+							{% if currentPage !== pageNum %}
+								<a href="/{{path}}{{ currentPage + 1}}.html">Next</a>
+							{% endif %}
+						</div>
+					</div>
+				</nav>
+			{% endif %}
 		</section>
 		<aside class="o-layout__item u-4/12@md">
 			{% include "templates/blog-sidebar.html" %}

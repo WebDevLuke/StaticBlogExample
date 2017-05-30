@@ -227,7 +227,7 @@ for(var i = 0; i < authorsList.length; i++) {
 //--------------------------------------------------------------------------------------------------------------------------------------
 
 // Define function to render article pages
-var renderPages = function(posts, destDir) {
+var renderPages = function(posts, destDir, filter) {
 	// Calculate number of required pages
 	var pageNum = Math.ceil(posts.length / config.postsPerPage);
 	// Duplicate articles so we can remove stuff without affecting global list
@@ -258,7 +258,8 @@ var renderPages = function(posts, destDir) {
 			authors: authorsList,
 			posts: postsToAdd,
 			currentPage: k,
-			pageNum: pageNum
+			pageNum: pageNum,
+			filter: filter
 		}, {env: env}))
 		.pipe(gulpif(indexToCome, rename("index.html"), rename(k + ".html")))
 		.pipe(gulp.dest(destDir));
@@ -272,18 +273,37 @@ var renderPages = function(posts, destDir) {
 // Generate articles page, pagination for all articles, categorys, tags and authors
 gulp.task('blog-index', function() {
 	// Render normal blog pages
-	renderPages(config.posts, "dist/posts/");
+	renderPages(config.posts, "dist/");
+	console.log("Generated Post listings pages");
 	// Render category pages
 	for(var i = 0; i < categories.length; i++) {
-		renderPages(categories[i].posts, "dist/category/" + categories[i].name.replace(/ /g, '-').toLowerCase());
+		// Generate empty filter 
+		var filter = new Object;
+		filter.name = categories[i].name;
+		filter.type = "category";
+		// Render pages
+		renderPages(categories[i].posts, "dist/category/" + categories[i].name.replace(/ /g, '-').toLowerCase(), filter);
+		console.log("Generated " +  categories[i].name + " category pages");
 	}
 	// Render tag pages
 	for(var i = 0; i < tags.length; i++) {
-		renderPages(tags[i].posts, "dist/tag/" + tags[i].name.replace(/ /g, '-').toLowerCase());
+		// Generate empty filter 
+		var filter = new Object;
+		filter.name = tags[i].name;
+		filter.type = "tag";
+		// Render pages
+		renderPages(tags[i].posts, "dist/tag/" + tags[i].name.replace(/ /g, '-').toLowerCase(), filter);
+		console.log("Generated " +  tags[i].name + " tag pages");
 	}
 	// Render author pages
 	for(var i = 0; i < authors.length; i++) {
-		renderPages(authors[i].posts, "dist/author/" + authors[i].name.replace(/ /g, '-').toLowerCase());
+		// Generate empty filter 
+		var filter = new Object;
+		filter.name = authors[i].name;
+		filter.type = "author";
+		// Render pages
+		renderPages(authors[i].posts, "dist/author/" + authors[i].name.replace(/ /g, '-').toLowerCase(), filter);
+		console.log("Generated " +  authors[i].name + " author pages");
 	}
 });
 
@@ -302,7 +322,7 @@ gulp.task('blog-posts', function() {
 			post: post
 		}, {env: env}))
 		.pipe(rename(slug + ".html"))
-		.pipe(gulp.dest("./dist/posts/"));
+		.pipe(gulp.dest("./dist/"));
 	}
 });
 
