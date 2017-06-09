@@ -78,29 +78,31 @@ markdown.register(env, marked);
 var categoryList = new Array;
 var categories = new Array;
 // Create list of categories
-for(var i = 0; i < config.posts.length; i++) {
-	if(categoryList.indexOf(config.posts[i].category) === -1) {
-		categoryList.push(config.posts[i].category);
+for(let post of config.posts) {
+	if(categoryList.indexOf(post.category) === -1) {
+		categoryList.push(post.category);
 	}
 }
+
+
 // Populate category object
 // This holds each category name + a list of all child posts
-for(var i = 0; i < categoryList.length; i++) {
+for(let category of categoryList) {
 	// Create category object
-	var category = new Object;
+	let categoryObj = new Object;
 	// Populate name
-	category.name = categoryList[i];
+	categoryObj.name = category;
 	// Create empty array to hold category posts
-	category.posts = new Array;
+	categoryObj.posts = new Array;
 	// Populate category posts
-	for(var h = 0; h < config.posts.length; h++) {
+	for(let post of config.posts) {
 		// If we have any matches
-		if(category.name === config.posts[h].category) {
-			category.posts.push(config.posts[h]);
+		if(categoryObj.name === post.category) {
+			categoryObj.posts.push(post);
 		}
 	}
 	// Push to global categories object
-	categories.push(category);
+	categories.push(categoryObj);
 }
 
 
@@ -110,34 +112,36 @@ for(var i = 0; i < categoryList.length; i++) {
 // Generate list of tags from posts
 var tagsList = new Array;
 var tags = new Array;
+
 // Create list of tags
-for(var i = 0; i < config.posts.length; i++) {
-	for(var h = 0; h < config.posts[i].tags.length; h++) {
-		if(tagsList.indexOf(config.posts[i].tags[h]) === -1) {
-			tagsList.push(config.posts[i].tags[h]);
+for(let post of config.posts) {
+	for(let tag of post.tags) {
+		if(tagsList.indexOf(tag) === -1) {
+			tagsList.push(tag);
 		}
 	}
 }
+
 // Populate tags object
 // This holds each tag name + a list of all child posts
-for(var i = 0; i < tagsList.length; i++) {
+for(let tag of tagsList) {
 	// Create tag object
-	var tag = new Object;
+	let tagObj = new Object;
 	// Populate name
-	tag.name = tagsList[i];
+	tagObj.name = tag
 	// Create empty array to hold tag posts
-	tag.posts = new Array;
+	tagObj.posts = new Array;
 	// Populate tag posts
-	for(var h = 0; h < config.posts.length; h++) {
+	for(let post of config.posts) {
 		// If we have any matches
-		for(var m = 0; m < config.posts[h].tags.length; m++) {
-			if(tag.name === config.posts[h].tags[m]) {
-				tag.posts.push(config.posts[h]);
+		for(let tag of post.tags) {
+			if(tag.name === tag) {
+				tagObj.posts.push(post);
 			}
 		}
 	}
 	// Push to global tags object
-	tags.push(tag);
+	tags.push(tagObj);
 }
 
 
@@ -148,29 +152,29 @@ for(var i = 0; i < tagsList.length; i++) {
 var authorsList = new Array;
 var authors = new Array;
 // Create list of authors
-for(var i = 0; i < config.posts.length; i++) {
-	if(authorsList.indexOf(config.posts[i].author) === -1) {
-		authorsList.push(config.posts[i].author);
+for(let post of config.posts) {
+	if(authorsList.indexOf(post.author) === -1) {
+		authorsList.push(post.author);
 	}
 }
 // Populate authors object
 // This holds each author name + a list of all child posts
-for(var i = 0; i < authorsList.length; i++) {
+for(let author of authorsList) {
 	// Create authors object
-	var author = new Object;
+	var authorObj = new Object;
 	// Populate name
-	author.name = authorsList[i];
+	authorObj.name = author;
 	// Create empty array to hold author posts
-	author.posts = new Array;
+	authorObj.posts = new Array;
 	// Populate author posts
-	for(var h = 0; h < config.posts.length; h++) {
+	for(let post of config.posts) {
 		// If we have any matches
-		if(author.name === config.posts[h].author) {
-			author.posts.push(config.posts[h]);
+		if(author.name === post.author) {
+			authorObj.posts.push(post);
 		}
 	}
 	// Push to global authors object
-	authors.push(author);
+	authors.push(authorObj);
 }
 
 
@@ -180,14 +184,14 @@ for(var i = 0; i < authorsList.length; i++) {
 // Define function to render article pages
 var renderPages = function(posts, destDir, filter) {
 	// Calculate number of required pages
-	var pageNum = Math.ceil(posts.length / config.postsPerPage);
+	let pageNum = Math.ceil(posts.length / config.postsPerPage);
 	// Duplicate articles so we can remove stuff without affecting global list
-	var postsLocal = posts.slice();
+	let postsLocal = posts.slice();
 	// Set up int for while loop. This will help with pagination naming.
 	// Start at 1, as in page 1
-	var k = 1;
+	let k = 1;
 	// Set up variable to determine if we should name a page index.html
-	var indexToCome = true;
+	let indexToCome = true;
 
 	// While loop
 	while(postsLocal.length){
@@ -227,42 +231,41 @@ gulp.task('blog-index', function() {
 	renderPages(config.posts, "dist/");
 	console.log("Generated Post listings pages");
 	// Render category pages
-	for(var i = 0; i < categories.length; i++) {
+	for(let category of categories) {
 		// Generate empty filter 
 		var filter = new Object;
-		filter.name = categories[i].name;
+		filter.name = category.name;
 		filter.type = "category";
 		// Render pages
-		renderPages(categories[i].posts, "dist/category/" + categories[i].name.replace(/ /g, '-').toLowerCase(), filter);
-		console.log("Generated " +  categories[i].name + " category pages");
+		renderPages(category.posts, "dist/category/" + category.name.replace(/ /g, '-').toLowerCase(), filter);
+		console.log("Generated " +  category.name + " category pages");
 	}
 	// Render tag pages
-	for(var i = 0; i < tags.length; i++) {
+	for(let tag of tags) {
 		// Generate empty filter 
 		var filter = new Object;
-		filter.name = tags[i].name;
+		filter.name = tag.name;
 		filter.type = "tag";
 		// Render pages
-		renderPages(tags[i].posts, "dist/tag/" + tags[i].name.replace(/ /g, '-').toLowerCase(), filter);
-		console.log("Generated " +  tags[i].name + " tag pages");
+		renderPages(tag.posts, "dist/tag/" + tag.name.replace(/ /g, '-').toLowerCase(), filter);
+		console.log("Generated " +  tag.name + " tag pages");
 	}
 	// Render author pages
-	for(var i = 0; i < authors.length; i++) {
+	for(let author of authors) {
 		// Generate empty filter 
 		var filter = new Object;
-		filter.name = authors[i].name;
+		filter.name = author.name;
 		filter.type = "author";
 		// Render pages
-		renderPages(authors[i].posts, "dist/author/" + authors[i].name.replace(/ /g, '-').toLowerCase(), filter);
-		console.log("Generated " +  authors[i].name + " author pages");
+		renderPages(author.posts, "dist/author/" + author.name.replace(/ /g, '-').toLowerCase(), filter);
+		console.log("Generated " +  author.name + " author pages");
 	}
 });
 
 // Generate individual blog posts
 gulp.task('blog-posts', function() {
-	for(var i = 0; i < config.posts.length; i++) {
-		console.log("Generated " + config.posts[i].title);
-		var post = config.posts[i];
+	for(let post of config.posts) {
+		console.log("Generated " + post.title);
 		gulp.src('./dev/templates/blog-post.html')
 		.pipe(gulpNunjucks.compile({
 			config: config,
@@ -271,7 +274,7 @@ gulp.task('blog-posts', function() {
 			authors: authorsList,
 			post: post
 		}, {env: env}))
-		.pipe(rename(config.posts[i].title.replace(/ /g, '-').toLowerCase() + ".html"))
+		.pipe(rename(post.title.replace(/ /g, '-').toLowerCase() + ".html"))
 		.pipe(gulp.dest("./dist/"));
 	}
 });
