@@ -1,0 +1,77 @@
+{
+	"title" : "My Static Generated Blog",
+	"postsPerPage" : 2,
+	"posts" : [
+		{
+			"title" : "Renaming 3rd party SASS mixins without overriding",
+			"author" : "Luke Harrison",
+			"date" : "29th April 2017",
+			"copy" : "my-post.md",
+			"category" : "Web Development",
+			"tags" : [
+				"CSS"
+			],
+			"excerpt" : "A simple look into using wrapper mixins as a simple way of renaming 3rd party mixins."
+		},
+		{
+			"title" : "Managing State in CSS with Reusable JavaScript Functions",
+			"author" : "Luke Harrison",
+			"date" : "28th April 2017",
+			"copy" : "my-post.md",
+			"category" : "Web Development",
+			"tags" : [
+				"CSS",
+				"JavaScript"
+			],
+			"excerpt" : "Determining the most efficient way of managing state can be a challenging issue in CSS, but thankfully there are many OOCSS-based methodologies out there which provide some good solutions. This article is all about managing the attributes that help with state through JavaScript in efficient ways."
+		},
+		{
+			"title" : "Naming Conventions for Sizes in Scalable CSS",
+			"author" : "Joe Bloggs",
+			"date" : "27th February 2017",
+			"copy" : "my-post.md",
+			"category" : "Web Development",
+			"tags" : [
+				"CSS",
+				"Naming Conventions"
+			],
+			"excerpt" : "In this article, I’ll be exploring how naming conventions can be used to represent sizes in scalable CSS."
+		},
+		{
+			"title" : "Create a SASS grid system part 2",
+			"author" : "Joe Bloggs",
+			"date" : "14th May 2014",
+			"copy" : "my-post.md",
+			"category" : "Web Development",
+			"tags" : [
+				"CSS",
+				"Grid System"
+			],
+			"excerpt" : "In my previous post I discussed how you can use SASS to create a simple responsive grid system where you define a few variables and let SASS worry about the calculations. Now to take it further."
+		},
+		{
+			"title" : "Create a SASS grid system",
+			"author" : "Joe Bloggs",
+			"date" : "21st April 2014",
+			"copy" : "my-post.md",
+			"category" : "Web Development",
+			"tags" : [
+				"CSS",
+				"Grid System"
+			],
+			"excerpt" : "In this post I'll be showing you how to create a responsive grid system where you simply define a few variables and let SASS worry about the rest."
+		},
+		{
+			"title" : "My top 5 memories from growing up with Web Design",
+			"author" : "Luke Harrison",
+			"date" : "15th March 2014",
+			"copy" : "my-post.md",
+			"category" : "Web Design",
+			"tags" : [
+				"Geocities",
+				"HTML"
+			],
+			"excerpt" : "With The World Wide Web recently celebrating it 25th anniversary, I've decided to take a trip down memory lane to recall the memories I have of growing up with web design as one of my major hobbies."
+		}
+	]
+}

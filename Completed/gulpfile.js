@@ -1,9 +1,9 @@
 //--------------------------------------------------------------------------------------------------------------------------------------
-// GULP OPTIONS
+// STATIC BLOG FUNCTIONS
 //--------------------------------------------------------------------------------------------------------------------------------------
 
 /*
-Tweak various options to suit the needs of your project
+Gulp functions to generate static blog
 */
 
 //--------------------------------------------------------------------------------------------------------------------------------------
@@ -14,38 +14,24 @@ Tweak various options to suit the needs of your project
 const gulp = require('gulp');
 // Required for SASS tags
 const sass = require('gulp-sass');
-// Used to lint SASS
-const gulpStylelint = require('gulp-stylelint');
 // Adds support for SASS globbing
 const sassGlob = require('gulp-sass-glob');
-// Used to rename CSS and JS depending if minified
-const rename = require("gulp-rename");
-// Used to add conditional functionality
-const gulpif = require('gulp-if');
-// Used to remove unused CSS styles post compile
-const uncss = require('gulp-uncss');
 // Used to create synchronous build tasks
 const runSequence = require('run-sequence');
 // Used to delete folders during build process
 const del = require('del');
-// Used to compile nunjacks templates if present
-const nunjucks = require('nunjucks');
-const markdown = require('nunjucks-markdown');
-const marked = require('marked');
-const gulpNunjucks = require('gulp-nunjucks');
 // Used to make directories
 const mkdirp = require('mkdirp');
 // Used to make local dev server
 const webserver = require('gulp-webserver');
 
-
-//--------------------------------------------------------------------------------------------------------------------------------------
-// BLOG FUNCTIONS
-//--------------------------------------------------------------------------------------------------------------------------------------
-
-/*
-Gulp functions to generate static blog pages
-*/
+// Used to rename CSS and JS depending if minified
+const rename = require("gulp-rename");
+// Used to compile nunjacks templates if present
+const nunjucks = require('nunjucks');
+const markdown = require('nunjucks-markdown');
+const marked = require('marked');
+const gulpNunjucks = require('gulp-nunjucks');
 
 
 // CONFIGURE MARKDOWN
@@ -77,6 +63,7 @@ markdown.register(env, marked);
 // Generate our categories object
 const categoryList = new Array;
 const categories = new Array;
+
 // Create list of categories
 for(let post of config.posts) {
 	if(!categoryList.includes(post.category)) {
@@ -150,6 +137,7 @@ for(let tag of tagsList) {
 // Generate our authors object
 const authorsList = new Array;
 const authors = new Array;
+
 // Create list of authors
 for(let post of config.posts) {
 	if(!authorsList.includes(post.author)) {
@@ -315,29 +303,8 @@ gulp.task('generate-blog', function(){
 
 /*
 A collection of tasks which aren't related to the "Generate static blog" concept. These aren't really relevant
-to static blogs so you should probably just ignore them.
+to the tutorial so you should probably just ignore them.
 */
-
-// MINIFY
-//--------------------------------------------------------------------------------------------------------------------------------------
-
-/*
-If minify is true then CSS & JS will be minified once compiled and will have a .min suffix before the file
-extension. For example 'style.min.css'.
-*/
-
-const minify = true;
-
-
-// SASS LINTING
-//--------------------------------------------------------------------------------------------------------------------------------------
-
-/*
-If lint is true then SASS will be linted by stylelint to enforce style guidelines. These rules can be tweaked 
-in '.stylelintrc'.
-*/
-
-const lint = false;
 
 
 // CONFIGURE PATHS
@@ -380,58 +347,6 @@ gulp.task('serve', function() {
 	}));
 });
 
-// SETUP TASK
-//--------------------------------------------------------------------------------------------------------------------------------------
-
-/*
-Task which you run on project start to setup SASS directory and copy required files from OrionCSS dependancy
-
-Creates SASS directory in dev directory and adds the following:-
-
-- Creates ITCSS directory structure
-- sample.main-orion-framework renamed to main and copied to SASS root
-- sample.component.mycomponent added to "06 - components" directory
-*/
-
-const folders = [
-	sassDev + "/01 - settings",
-	sassDev + "/02 - tools",
-	sassDev + "/03 - generic",
-	sassDev + "/04 - elements",
-	sassDev + "/05 - objects",
-	sassDev + "/06 - components",
-	sassDev + "/07 - utilities",
-	jsDev
-]
-
-gulp.task('setup', function(){
-	// Generate directories
-	for(var i = 0; i < folders.length; i++) {
-		mkdirp(folders[i], function (err) {
-			if(err){
-				console.error(err);
-			}
-		});
-	}
-	// Grab main sample and move to SASS root
-	gulp.src('node_modules/orioncss/sample.main-orion-framework.scss')
-	.pipe(rename('main.scss'))
-	.pipe(gulp.dest(sassDev))
-	// Grab sample component and move to new components dir
-	gulp.src('node_modules/orioncss/06 - components/_sample.component.mycomponent.scss')
-	.pipe(gulp.dest(sassDev + '/06 - components/'));
-	// Gram sample JS main, rename and then 
-	gulp.src('node_modules/orionjs/sample.main.js')
-	.pipe(rename('main.js'))
-	.pipe(gulp.dest(jsDev))
-});
-
-// Developer task to clear content added by setup task so we don't accidently commit it.
-gulp.task('unsetup', function(){
-	del(sassDev);
-	del(jsDev);
-});
-
 
 // DELETE DIST DIRECTORY
 //--------------------------------------------------------------------------------------------------------------------------------------
@@ -449,80 +364,10 @@ gulp.task('deleteDist', function(){
 gulp.task('sass', function () {
 	return gulp.src(sassDev + '/*.scss')
 	.pipe(sassGlob())
-	.pipe(gulpif(minify, sass({outputStyle: 'compressed', precision: 8}), sass({outputStyle: 'expanded', precision: 8})))
-	.pipe(gulpif(minify, rename({ suffix: '.min' })))
+	.pipe(sass({outputStyle: 'compressed', precision: 8}))
+	.pipe(rename({ suffix: '.min' }))
 	.on('error', sass.logError)
 	.pipe(gulp.dest('./' + sassDist))
-});
-
-// A SASS task for debug use. Compiles an unminified stylesheet but uses canon naming structure as
-// per minify variable so no links are broken on the page
-gulp.task('sass-debug', function () {
-	return gulp.src(sassDev + '/*.scss')
-	.pipe(sassGlob())
-	.pipe(sass({outputStyle: 'expanded', precision: 8}))
-	.pipe(gulpif(minify, rename({ suffix: '.min' })))
-	.on('error', sass.logError)
-	.pipe(gulp.dest('./' + sassDist))
-});
-
-
-// Lint SASS Task
-gulp.task('sass-lint', function lintCssTask() {
-	return gulp.src(sassDev + '/**/*.scss')
-	.pipe(gulpStylelint({
-		reportOutputDir: 'reports/lint',
-		reporters: [{
-			formatter: 'verbose',
-			console: true,
-			save: 'report.txt'
-		}]
-	}));
-});
-
-// Watch task for SASS. Lints and then runs standard SASS functions. No UNCSS to speed things up..
-gulp.task('sass-watch', function(){
-	if(lint) {
-		runSequence(
-			"sass-lint",
-			"sass"
-		);
-	}
-	else {
-		runSequence(
-			"sass"
-		);		
-	}
-});
-
-// Create seperate sass build task which lints and then runs standard SASS functions followed by UNCSS
-// This will be used on Build task. It won't be used on watch task to speed things up.
-gulp.task('sass-build', function(){
-	if(lint) {
-		runSequence(
-			"sass-lint",
-			"sass"
-		);
-	}
-	else {
-		runSequence(
-			"sass"
-		);		
-	}
-});
-
-gulp.task('sass-build-debug', function(){
-	if(lint) {
-		runSequence(
-			"sass-lint",
-			"sass-debug"
-		);
-	}
-	else {
-		runSequence(
-			"sass"
-		);		
-	}
 });
 
 
@@ -549,7 +394,7 @@ gulp.task("watch", function() {
 	// HTML
 	gulp.watch(htmlDev + '/**/*.html',['generate-blog']);
 	// SASS
-	gulp.watch(sassDev + '/**/*.scss',['sass-watch']);
+	gulp.watch(sassDev + '/**/*.scss',['sass']);
 });
 
 // BUILD FUNCTION
@@ -558,6 +403,6 @@ gulp.task('build',function() {
 		// Delete Dist Folder
 		"deleteDist",	
 		// Run other tasks asynchronously 
-		["generate-blog", "sass-build", "images"]
+		["generate-blog", "sass", "images"]
 	);
 });

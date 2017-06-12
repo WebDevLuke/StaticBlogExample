@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+<!--Meta Stuff-->
+<meta charset="UTF-8" />
+
+<!--Responsive Viewport-->
+<meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1" />
+
+<!--Page Title-->
+<title>Create a static blog using Gulp and Nunjucks | My Static Generated Blog</title>
+
+<!--CSS-->
+<link rel="stylesheet" type="text/css" href="/css/main.min.css" />
+
+</head>
+<body>
+
+<header class="o-box o-box--spacing-large u-padding-horizontal-none u-background-lightgrey u-align-center u-margin-bottom-regular u-margin-bottom-huge@md">	
+	<h1 class="c-type-alpha"><a href="/">My Static Generated Blog</a></h1>
+</header>
+
+<div class="o-container u-margin-bottom-huge">
+	<div class="o-layout o-layout--spacing-large">
+		<section class="o-layout__item u-8/12@md">
+
+			{# Post #}
+			<div data-component="post" class="c-post u-margin-bottom-regular">
+				{# Title #}
+				<div class="c-post__title">
+					<h2 class="c-type-charlie">Create a static blog using Gulp and Nunjucks</h2>
+					<span>By <a href="/author/">Luke Harrison</a></span>
+				</div>
+				<div class="c-post__info u-margin-bottom-small">
+
+					<div class="u-float-left@sm3 u-margin-right-small@sm3">
+						<div class="o-media o-media--spacing-micro">
+							<div class="o-media__image">
+								<img src="/img/clock.svg" class="c-icon-clock" alt="post date">
+							</div>
+							<div class="o-media__body">
+								XXth June 2017
+							</div>
+						</div>						
+					</div>
+
+					<div class="u-float-left@sm3 u-margin-right-small@sm3">
+						<div class="o-media o-media--spacing-micro">
+							<div class="o-media__image">
+								<img src="/img/folder.svg" class="c-icon-folder" alt="category">
+							</div>
+							<div class="o-media__body">
+								<a href="/category/">Web Development</a>
+							</div>
+						</div>						
+					</div>
+
+					<div class="u-float-left@sm3 u-margin-right-small@sm3">
+						<div class="o-media o-media--spacing-micro">
+							<div class="o-media__image">
+								<img src="/img/tag.svg" class="c-icon-tag" alt="tag">
+							</div>
+							<div class="o-media__body">
+								<ul class="o-list-inline o-list-inline--delimited-comma o-list-inline--spacing-tiny">
+									<li class="o-list-inline__item"><a href="/tag/">JavaScript</a></li>
+									<li class="o-list-inline__item"><a href="/tag/">Gulp</a></li>
+									<li class="o-list-inline__item"><a href="/tag/">Nunjucks</a></li>
+								</ul>
+							</div>
+						</div>						
+					</div>
+				</div>
+
+				<!-- Post Text -->
+
+			</div>
+
+		</section>
+		<aside class="o-layout__item u-4/12@md">
+			<div class="u-margin-bottom-small u-margin-bottom-regular@md">
+				<h2 class="c-type-beta u-margin-bottom-tiny">Categories</h2>
+				<ul class="o-list-bare">
+					<li><a href="/category/">Web Design</a></li>
+					<li><a href="/category/">Web Development</a></li>
+				</ul>
+			</div>
+			<div class="u-margin-bottom-small u-margin-bottom-regular@md">
+				<h2 class="c-type-beta u-margin-bottom-tiny">Tags</h2>
+				<ul class="o-list-bare">
+					<li><a href="/tag/">Gulp</a></li>
+					<li><a href="/tag/">JavaScript</a></li>
+					<li><a href="/tag/">Nunjucks</a></li>
+				</ul>
+			</div>
+			<div class="u-margin-bottom-small u-margin-bottom-regular@md">
+				<h2 class="c-type-beta u-margin-bottom-tiny">Authors</h2>
+				<ul class="o-list-bare">
+					<li><a href="/author/">Luke Harrison</a></li>
+					<li><a href="/author/">Tester Jester</a></li>
+				</ul>
+			</div> 
+		</aside>
+	</div>
+</div>
+
+
+
+
+</body>
+</html>

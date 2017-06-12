@@ -1,0 +1,23 @@
+{
+  "name": "staticblogexample",
+  "version": "0.0.1",
+  "author": "Luke Harrison",
+  "description": "An example of a static blog created using Gulp and Nunjucks",
+  "homepage": "http://www.lukeharrison.net",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/WebDevLuke/StaticBlogExample.git"
+  },
+  "devDependencies": {
+    "del": "^2.2.0",
+    "gulp": "^3.9.1",
+    "gulp-rename": "^1.2.2",
+    "gulp-sass": "^3.1.0",
+    "gulp-sass-glob": "^1.0.8",
+    "gulp-webserver": "^0.9.1",
+    "mkdirp": "^0.5.1",
+    "orioncss": "^2.4.0",
+    "run-sequence": "^1.1.5"
+  }
+}
