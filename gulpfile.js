@@ -36,7 +36,7 @@ const gulpNunjucks = require('gulp-nunjucks');
 // Used to make directories
 const mkdirp = require('mkdirp');
 // Used to make local dev server
-var webserver = require('gulp-webserver');
+const webserver = require('gulp-webserver');
 
 
 //--------------------------------------------------------------------------------------------------------------------------------------
@@ -52,10 +52,10 @@ Gulp functions to generate static blog pages
 //--------------------------------------------------------------------------------------------------------------------------------------
 
 // Setup new nunjucks with "dev" folder as root
-var env = new nunjucks.Environment(new nunjucks.FileSystemLoader("dev"));
+const env = new nunjucks.Environment(new nunjucks.FileSystemLoader("dev"));
 
 // Grab config object
-var config = require("./dev/config.json");
+const config = require("./dev/config.json");
 
 // Set marked options
 marked.setOptions({
@@ -75,15 +75,14 @@ markdown.register(env, marked);
 //--------------------------------------------------------------------------------------------------------------------------------------
 
 // Generate our categories object
-var categoryList = new Array;
-var categories = new Array;
+const categoryList = new Array;
+const categories = new Array;
 // Create list of categories
 for(let post of config.posts) {
-	if(categoryList.indexOf(post.category) === -1) {
+	if(!categoryList.includes(post.category)) {
 		categoryList.push(post.category);
 	}
 }
-
 
 // Populate category object
 // This holds each category name + a list of all child posts
@@ -110,13 +109,13 @@ for(let category of categoryList) {
 //--------------------------------------------------------------------------------------------------------------------------------------
 
 // Generate list of tags from posts
-var tagsList = new Array;
-var tags = new Array;
+const tagsList = new Array;
+const tags = new Array;
 
 // Create list of tags
 for(let post of config.posts) {
 	for(let tag of post.tags) {
-		if(tagsList.indexOf(tag) === -1) {
+		if(!tagsList.includes(tag)) {
 			tagsList.push(tag);
 		}
 	}
@@ -135,7 +134,7 @@ for(let tag of tagsList) {
 	for(let post of config.posts) {
 		// If we have any matches
 		for(let tag of post.tags) {
-			if(tag.name === tag) {
+			if(tagObj.name === tag) {
 				tagObj.posts.push(post);
 			}
 		}
@@ -149,11 +148,11 @@ for(let tag of tagsList) {
 //--------------------------------------------------------------------------------------------------------------------------------------
 
 // Generate our authors object
-var authorsList = new Array;
-var authors = new Array;
+const authorsList = new Array;
+const authors = new Array;
 // Create list of authors
 for(let post of config.posts) {
-	if(authorsList.indexOf(post.author) === -1) {
+	if(!authorsList.includes(post.author)) {
 		authorsList.push(post.author);
 	}
 }
@@ -161,7 +160,7 @@ for(let post of config.posts) {
 // This holds each author name + a list of all child posts
 for(let author of authorsList) {
 	// Create authors object
-	var authorObj = new Object;
+	let authorObj = new Object;
 	// Populate name
 	authorObj.name = author;
 	// Create empty array to hold author posts
@@ -169,7 +168,7 @@ for(let author of authorsList) {
 	// Populate author posts
 	for(let post of config.posts) {
 		// If we have any matches
-		if(author.name === post.author) {
+		if(authorObj.name === post.author) {
 			authorObj.posts.push(post);
 		}
 	}
@@ -182,7 +181,7 @@ for(let author of authorsList) {
 //--------------------------------------------------------------------------------------------------------------------------------------
 
 // Define function to render article pages
-var renderPages = function(posts, destDir, filter) {
+const renderPages = function(posts, destDir, filter) {
 	// Calculate number of required pages
 	let pageNum = Math.ceil(posts.length / config.postsPerPage);
 	// Duplicate articles so we can remove stuff without affecting global list
@@ -196,12 +195,13 @@ var renderPages = function(posts, destDir, filter) {
 	// While loop
 	while(postsLocal.length){
 		// If we have a block of postsPerPage add that
+		let postsToAdd;
 		if(postsLocal.length >= config.postsPerPage) {
-			var postsToAdd = postsLocal.splice(0, config.postsPerPage);
+			postsToAdd = postsLocal.splice(0, config.postsPerPage);
 		}
 		// If no more blocks of postsPerPage remain, just add what's left
 		else {
-			var postsToAdd = postsLocal;
+			postsToAdd = postsLocal;
 			postsLocal = [];
 		}
 		// Process list of articles
@@ -233,7 +233,7 @@ gulp.task('blog-index', function() {
 	// Render category pages
 	for(let category of categories) {
 		// Generate empty filter 
-		var filter = new Object;
+		let filter = new Object;
 		filter.name = category.name;
 		filter.type = "category";
 		// Render pages
@@ -243,7 +243,7 @@ gulp.task('blog-index', function() {
 	// Render tag pages
 	for(let tag of tags) {
 		// Generate empty filter 
-		var filter = new Object;
+		let filter = new Object;
 		filter.name = tag.name;
 		filter.type = "tag";
 		// Render pages
@@ -253,7 +253,7 @@ gulp.task('blog-index', function() {
 	// Render author pages
 	for(let author of authors) {
 		// Generate empty filter 
-		var filter = new Object;
+		let filter = new Object;
 		filter.name = author.name;
 		filter.type = "author";
 		// Render pages
